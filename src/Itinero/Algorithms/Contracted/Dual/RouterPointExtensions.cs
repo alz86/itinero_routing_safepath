@@ -40,7 +40,7 @@ namespace Itinero.Algorithms.Contracted.Dual
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -48,9 +48,9 @@ namespace Itinero.Algorithms.Contracted.Dual
                 return new DykstraSource<T>
                 {
                     Vertex1 = (new DirectedEdgeId(point.EdgeId, true)).Raw,
-                    Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                    Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                     Vertex2 = (new DirectedEdgeId(point.EdgeId, false)).Raw,
-                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                 };
             }
             else if (factor.Direction == 1)
@@ -60,7 +60,7 @@ namespace Itinero.Algorithms.Contracted.Dual
                     return new DykstraSource<T>
                     {
                         Vertex1 = (new DirectedEdgeId(point.EdgeId, true)).Raw,
-                        Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                        Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                         Vertex2 = Constants.NO_VERTEX,
                         Weight2 = weightHandler.Infinite
                     };
@@ -70,7 +70,7 @@ namespace Itinero.Algorithms.Contracted.Dual
                     Vertex1 = Constants.NO_VERTEX,
                     Weight1 = weightHandler.Infinite,
                     Vertex2 = (new DirectedEdgeId(point.EdgeId, false)).Raw,
-                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                 };
             }
             else
@@ -82,13 +82,13 @@ namespace Itinero.Algorithms.Contracted.Dual
                         Vertex1 = Constants.NO_VERTEX,
                         Weight1 = weightHandler.Infinite,
                         Vertex2 = (new DirectedEdgeId(point.EdgeId, false)).Raw,
-                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                     };
                 }
                 return new DykstraSource<T>
                 {
                     Vertex1 = (new DirectedEdgeId(point.EdgeId, true)).Raw,
-                    Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                    Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                     Vertex2 = Constants.NO_VERTEX,
                     Weight2 = weightHandler.Infinite
                 };

@@ -24,15 +24,17 @@ using Itinero.Algorithms.Contracted.EdgeBased;
 using Itinero.Data.Contracted;
 using Itinero.Data.Contracted.Edges;
 using Itinero.Algorithms.Collections;
+using Itinero.Safety;
+using Itinero.Graphs;
 
 namespace Itinero.Algorithms.Weights
 {
     /// <summary>
     /// A default weight handler.
     /// </summary>
-    public sealed class DefaultWeightHandler : WeightHandler<float>
+    public class DefaultWeightHandler : WeightHandler<float>
     {
-        private Func<ushort, Factor> _getFactor;
+        protected Func<ushort, Factor> _getFactor;
 
         /// <summary>
         /// Creates a new default weight handler.
@@ -85,7 +87,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Calculates the weight for the given edge and distance.
         /// </summary>
-        public sealed override float Calculate(ushort edgeProfile, float distance, out Factor factor)
+        public override float Calculate(ushort edgeProfile, float distance, uint edgeId, out Factor factor)
         {
             factor = _getFactor(edgeProfile);
             return (distance * factor.Value);
@@ -94,16 +96,16 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Calculates the weight and direction for the given edge profile.
         /// </summary>
-        public sealed override WeightAndDir<float> CalculateWeightAndDir(ushort edgeProfile, float distance)
+        public override WeightAndDir<float> CalculateWeightAndDir(ushort edgeProfile, float distance, uint edgeId)
         {
             bool accessible;
-            return this.CalculateWeightAndDir(edgeProfile, distance, out accessible);
+            return this.CalculateWeightAndDir(edgeProfile, distance, edgeId, out accessible);
         }
 
         /// <summary>
         /// Calculates the weight and direction for the given edge profile.
         /// </summary>
-        public sealed override WeightAndDir<float> CalculateWeightAndDir(ushort edgeProfile, float distance, out bool accessible)
+        public override WeightAndDir<float> CalculateWeightAndDir(ushort edgeProfile, float distance, uint edgeId, out bool accessible)
         {
             var factor = _getFactor(edgeProfile);
             var weight = new WeightAndDir<float>();
@@ -128,7 +130,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Adds weight to given weight based on the given distance and profile.
         /// </summary>
-        public sealed override float Add(float weight, ushort edgeProfile, float distance, out Factor factor)
+        public override float Add(float weight, ushort edgeProfile, uint edgeId, float distance, out Factor factor)
         {
             factor = _getFactor(edgeProfile);
             return weight + (distance * factor.Value);
@@ -181,7 +183,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override float GetEdgeWeight(MetaEdge edge, out bool? direction)
+        public override float GetEdgeWeight(MetaEdge edge, out bool? direction)
         {
             float weight;
             Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data[0],
@@ -192,7 +194,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override WeightAndDir<float> GetEdgeWeight(MetaEdge edge)
+        public override WeightAndDir<float> GetEdgeWeight(MetaEdge edge)
         {
             return Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data[0]);
         }
@@ -218,7 +220,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override float GetEdgeWeight(DirectedMetaGraph.EdgeEnumerator edge, out bool? direction)
+        public override float GetEdgeWeight(DirectedMetaGraph.EdgeEnumerator edge, out bool? direction)
         {
             float weight;
             Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data0,
@@ -229,7 +231,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override WeightAndDir<float> GetEdgeWeight(DirectedMetaGraph.EdgeEnumerator edge)
+        public override WeightAndDir<float> GetEdgeWeight(DirectedMetaGraph.EdgeEnumerator edge)
         {
             return Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data0);
         }
@@ -237,7 +239,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override float GetEdgeWeight(DynamicEdge edge, out bool? direction)
+        public override float GetEdgeWeight(DynamicEdge edge, out bool? direction)
         {
             float weight;
             Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data[0],
@@ -248,7 +250,7 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Gets the weight from the given edge and sets the direction.
         /// </summary>
-        public sealed override float GetEdgeWeight(DirectedDynamicGraph.EdgeEnumerator edge, out bool? direction)
+        public override float GetEdgeWeight(DirectedDynamicGraph.EdgeEnumerator edge, out bool? direction)
         {
             float weight;
             Data.Contracted.Edges.ContractedEdgeDataSerializer.Deserialize(edge.Data0,
@@ -294,4 +296,6 @@ namespace Itinero.Algorithms.Weights
             return weight < max;
         }
     }
+
+    
 }

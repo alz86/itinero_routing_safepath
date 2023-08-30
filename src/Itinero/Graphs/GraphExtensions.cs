@@ -71,7 +71,7 @@ namespace Itinero.Graphs
                     float distance;
                     ushort edgeProfile;
                     EdgeDataSerializer.Deserialize(edgeEnumerator.Data0, out distance, out edgeProfile);
-                    var weight = weightHandler.Calculate(edgeProfile, distance, out factor);
+                    var weight = weightHandler.Calculate(edgeProfile, distance, edgeEnumerator.Id, out factor);
 
                     if (factor.Value > 0 && (factor.Direction == 0 ||
                         ((factor.Direction == 1) && !edgeEnumerator.DataInverted) ||
@@ -95,7 +95,7 @@ namespace Itinero.Graphs
                         float distance;
                         ushort edgeProfile;
                         EdgeDataSerializer.Deserialize(edgeEnumerator.Data0, out distance, out edgeProfile);
-                        var weight = weightHandler.Calculate(edgeProfile, distance, out factor);
+                        var weight = weightHandler.Calculate(edgeProfile, distance, edgeEnumerator.Id, out factor);
 
                         //if (factor.Value > 0 && (factor.Direction == 0 ||
                         //    ((factor.Direction == 1) && !edgeEnumerator.DataInverted) ||

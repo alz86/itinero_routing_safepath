@@ -68,7 +68,7 @@ namespace Itinero.Algorithms.Contracted
                     EdgeDataSerializer.Deserialize(edgeEnumerator.Data0, 
                         out distance, out edgeProfile);
                     Factor factor;
-                    var weight = _weightHandler.Calculate(edgeProfile, distance, out factor);
+                    var weight = _weightHandler.Calculate(edgeProfile, distance, edgeEnumerator.Current.Id, out factor);
 
                     if(factor.Value != 0)
                     {

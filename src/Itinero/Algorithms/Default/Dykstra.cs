@@ -200,7 +200,7 @@ namespace Itinero.Algorithms.Default
 
                 // get the speed from cache or calculate.
                 EdgeDataSerializer.Deserialize(edge.Data0, out var distance, out var edgeProfile);
-                var totalWeight = _weightHandler.Add(_current.Weight, edgeProfile, distance, out var factor);
+                var totalWeight = _weightHandler.Add(_current.Weight, edgeProfile, edge.Id, distance, out var factor);
 
                 // check the tags against the interpreter.
                 if (factor.Value > 0 && (factor.Direction == 0 ||

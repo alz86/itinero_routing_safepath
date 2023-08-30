@@ -67,7 +67,7 @@ namespace Itinero.Algorithms.Dual
                     EdgeDataSerializer.Deserialize(enumerator1.Data0,
                         out distance, out edgeProfile);
                     var accessible1 = false;
-                    var weight1 = _weightHandler.CalculateWeightAndDir(edgeProfile, distance, out accessible1);
+                    var weight1 = _weightHandler.CalculateWeightAndDir(edgeProfile, distance, enumerator1.Id, out accessible1);
                     if (enumerator1.DataInverted)
                     {
                         var dir = weight1.Direction;
@@ -90,7 +90,7 @@ namespace Itinero.Algorithms.Dual
                         EdgeDataSerializer.Deserialize(enumerator2.Data0,
                             out distance, out edgeProfile);
                         var accessible2 = false;
-                        var weight2 = _weightHandler.CalculateWeightAndDir(edgeProfile, distance, out accessible2);
+                        var weight2 = _weightHandler.CalculateWeightAndDir(edgeProfile, distance, enumerator2.Id, out accessible2);
                         if (enumerator2.DataInverted)
                         {
                             var dir = weight2.Direction;

@@ -32,11 +32,11 @@ namespace Itinero.Algorithms.Weights
         /// <summary>
         /// Calculates the weight for the given edge and distance.
         /// </summary>
-        public static T Calculate<T>(this WeightHandler<T> handler, ushort edgeProfile, float distance)
+        public static T Calculate<T>(this WeightHandler<T> handler, ushort edgeProfile, float distance, uint egdeId)
             where T : struct
         {
             Factor factor;
-            return handler.Calculate(edgeProfile, distance, out factor);
+            return handler.Calculate(edgeProfile, distance, egdeId, out factor);
         }
 
         /// <summary>

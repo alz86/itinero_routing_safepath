@@ -55,7 +55,7 @@ namespace Itinero
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -63,11 +63,11 @@ namespace Itinero
                 if (forward.Value)
                 {
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                     };
                 }
                 return new EdgePath<T>[] {
-                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>())
+                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>())
                 };
             }
             else if (factor.Direction == 1)
@@ -77,7 +77,7 @@ namespace Itinero
                     if (forward.Value)
                     {
                         return new EdgePath<T>[] {
-                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                         };
                     }
                     return new EdgePath<T>[0];
@@ -87,7 +87,7 @@ namespace Itinero
                     return new EdgePath<T>[0];
                 }
                 return new EdgePath<T>[] {
-                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>())
+                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>())
                 };
             }
             else
@@ -97,7 +97,7 @@ namespace Itinero
                     if (forward.Value)
                     {
                         return new EdgePath<T>[] {
-                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                         };
                     }
                     return new EdgePath<T>[0];
@@ -107,7 +107,7 @@ namespace Itinero
                     return new EdgePath<T>[0];
                 }
                 return new EdgePath<T>[] {
-                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>())
+                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>())
                 };
             }
         }
@@ -125,7 +125,7 @@ namespace Itinero
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -134,19 +134,19 @@ namespace Itinero
                 { // the first part is just the first vertex.
                     return new EdgePath<T>[] {
                         new EdgePath<T>(edge.From),
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                     };
                 }
                 else if (offset == 1)
                 { // the second path it just the second vertex.
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To)),
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To)),
                         new EdgePath<T>(edge.To)
                     };
                 }
                 return new EdgePath<T>[] {
-                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>()),
-                    new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>()),
+                    new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                 };
             }
             else if (factor.Direction == 1)
@@ -163,11 +163,11 @@ namespace Itinero
                     { // return both, we are at the from-vertex.
                         return new EdgePath<T>[] {
                             new EdgePath<T>(edge.From),
-                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                         };
                     }
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                     };
                 }
                 if (offset == 0)
@@ -180,11 +180,11 @@ namespace Itinero
                 { // return both, we are at the to-vertex.
                     return new EdgePath<T>[] {
                         new EdgePath<T>(edge.To),
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To))
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To))
                     };
                 }
                 return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>())
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>())
                     };
             }
             else
@@ -201,11 +201,11 @@ namespace Itinero
                     { // return both, we are at the from-vertex.
                         return new EdgePath<T>[] {
                             new EdgePath<T>(edge.From),
-                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                            new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                         };
                     }
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>())
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>())
                     };
                 }
                 if (offset == 0)
@@ -218,11 +218,11 @@ namespace Itinero
                 { // return both, we are at the to-vertex.
                     return new EdgePath<T>[] {
                         new EdgePath<T>(edge.To),
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To))
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To))
                     };
                 }
                 return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>())
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>())
                     };
             }
         }
@@ -580,7 +580,7 @@ namespace Itinero
             var distance = ((float)System.Math.Abs((int)point.Offset - (int)target.Offset) / (float)ushort.MaxValue) *
                 edge.Data.Distance;
             Factor factor;
-            var weight = weightHandler.Calculate(edge.Data.Profile, distance, out factor);
+            var weight = weightHandler.Calculate(edge.Data.Profile, distance, edge.Id, out factor);
             if (factor.Value <= 0)
             { // not possible to travel here.
                 return null;
@@ -629,7 +629,7 @@ namespace Itinero
             var distance = ((float)System.Math.Abs((int)point.Offset - (int)target.Offset) / (float)ushort.MaxValue) *
                 edge.Data.Distance;
             Factor factor;
-            var weight = weightHandler.Calculate(edge.Data.Profile, distance, out factor);
+            var weight = weightHandler.Calculate(edge.Data.Profile, distance, edge.Id, out factor);
             if (factor.Value <= 0)
             { // not possible to travel here.
                 return null;
@@ -689,7 +689,7 @@ namespace Itinero
             if (edge.From == neighbour)
             {
                 var distance = ((float)System.Math.Abs((int)point.Offset) / (float)ushort.MaxValue) *  edge.Data.Distance;
-                var weight = weightHandler.Calculate(edge.Data.Profile, distance, out factor);
+                var weight = weightHandler.Calculate(edge.Data.Profile, distance, edge.Id, out factor);
                 if (backward)
                 {
                     return new EdgePath<T>(Constants.NO_VERTEX, weight, edge.IdDirected(), new EdgePath<T>(neighbour));
@@ -699,7 +699,7 @@ namespace Itinero
             else if(edge.To == neighbour)
             {
                 var distance = (1 - ((float)System.Math.Abs((int)point.Offset) / (float)ushort.MaxValue)) * edge.Data.Distance;
-                var weight = weightHandler.Calculate(edge.Data.Profile, distance, out factor);
+                var weight = weightHandler.Calculate(edge.Data.Profile, distance, edge.Id, out factor);
                 if (backward)
                 {
                     return new EdgePath<T>(Constants.NO_VERTEX, weight, edge.IdDirected(), new EdgePath<T>(neighbour));
@@ -813,7 +813,7 @@ namespace Itinero
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -822,19 +822,19 @@ namespace Itinero
                 { // the first part is just the first vertex.
                     return new EdgePath<T>[] {
                         new EdgePath<T>(edge.From, weightHandler.Zero, -edge.IdDirected(), new EdgePath<T>(edge.To)),
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                     };
                 }
                 else if (offset == 1)
                 { // the second path it just the second vertex.
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To)),
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To)),
                         new EdgePath<T>(edge.To, weightHandler.Zero, edge.IdDirected(), new EdgePath<T>(edge.From))
                     };
                 }
                 return new EdgePath<T>[] {
-                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To)),
-                    new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                    new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To)),
+                    new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                 };
             }
             else if (factor.Direction == 1)
@@ -848,7 +848,7 @@ namespace Itinero
                         };
                     }
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                     };
                 }
                 if (offset == 0)
@@ -858,7 +858,7 @@ namespace Itinero
                     };
                 }
                 return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To))
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To))
                     };
             }
             else
@@ -872,7 +872,7 @@ namespace Itinero
                         };
                     }
                     return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset)), edge.IdDirected(), new EdgePath<T>(edge.From))
+                        new EdgePath<T>(edge.To, weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id), edge.IdDirected(), new EdgePath<T>(edge.From))
                     };
                 }
                 if (offset == 0)
@@ -882,7 +882,7 @@ namespace Itinero
                     };
                 }
                 return new EdgePath<T>[] {
-                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset), -edge.IdDirected(), new EdgePath<T>(edge.To))
+                        new EdgePath<T>(edge.From, weightHandler.Calculate(profileId, distance * offset, edge.Id), -edge.IdDirected(), new EdgePath<T>(edge.To))
                     };
             }
         }

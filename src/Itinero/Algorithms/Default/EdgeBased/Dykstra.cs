@@ -240,7 +240,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                 ushort edgeProfile;
                 EdgeDataSerializer.Deserialize(edge.Data0, out distance, out edgeProfile);
                 var factor = Factor.NoFactor;
-                var edgeWeight = _weightHandler.Calculate(edgeProfile, distance, out factor);
+                var edgeWeight = _weightHandler.Calculate(edgeProfile, distance, edge.Id, out factor);
 
                 // check the tags against the interpreter.
                 if (factor.Value > 0 && (factor.Direction == 0 ||

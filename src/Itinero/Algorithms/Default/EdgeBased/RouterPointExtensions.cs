@@ -41,7 +41,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -49,9 +49,9 @@ namespace Itinero.Algorithms.Default.EdgeBased
                 return new DirectedDykstraSource<T>
                 {
                     Edge1 = (new DirectedEdgeId(point.EdgeId, true)),
-                    Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                    Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                     Edge2 = (new DirectedEdgeId(point.EdgeId, false)),
-                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                 };
             }
             else if (factor.Direction == 1)
@@ -61,7 +61,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                     return new DirectedDykstraSource<T>
                     {
                         Edge1 = (new DirectedEdgeId(point.EdgeId, true)),
-                        Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                        Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                         Edge2 = DirectedEdgeId.NO_EDGE,
                         Weight2 = weightHandler.Infinite
                     };
@@ -71,7 +71,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                     Edge1 = DirectedEdgeId.NO_EDGE,
                     Weight1 = weightHandler.Infinite,
                     Edge2 = (new DirectedEdgeId(point.EdgeId, false)),
-                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                 };
             }
             else
@@ -83,13 +83,13 @@ namespace Itinero.Algorithms.Default.EdgeBased
                         Edge1 = DirectedEdgeId.NO_EDGE,
                         Weight1 = weightHandler.Infinite,
                         Edge2 = (new DirectedEdgeId(point.EdgeId, false)),
-                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                     };
                 }
                 return new DirectedDykstraSource<T>
                 {
                     Edge1 = (new DirectedEdgeId(point.EdgeId, true)),
-                    Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                    Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                     Edge2 = DirectedEdgeId.NO_EDGE,
                     Weight2 = weightHandler.Infinite
                 };
@@ -112,7 +112,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
             ushort profileId;
             EdgeDataSerializer.Deserialize(edge.Data[0], out distance, out profileId);
             Factor factor;
-            var edgeWeight = weightHandler.Calculate(profileId, distance, out factor);
+            var edgeWeight = weightHandler.Calculate(profileId, distance, edge.Id, out factor);
 
             var offset = point.Offset / (float)ushort.MaxValue;
             if (factor.Direction == 0)
@@ -122,7 +122,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                     return new DirectedDykstraSource<T>
                     {
                         Edge1 = (new DirectedEdgeId(point.EdgeId, true)),
-                        Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                        Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                         Edge2 = DirectedEdgeId.NO_EDGE,
                         Weight2 = weightHandler.Infinite
                     };
@@ -134,7 +134,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                         Edge1 = DirectedEdgeId.NO_EDGE,
                         Weight1 = weightHandler.Infinite,
                         Edge2 = (new DirectedEdgeId(point.EdgeId, false)),
-                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                        Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                     };
                 }
             }
@@ -145,7 +145,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                     return new DirectedDykstraSource<T>
                     {
                         Edge1 = (new DirectedEdgeId(point.EdgeId, true)),
-                        Weight1 = weightHandler.Calculate(profileId, distance * offset),
+                        Weight1 = weightHandler.Calculate(profileId, distance * offset, edge.Id),
                         Edge2 = DirectedEdgeId.NO_EDGE,
                         Weight2 = weightHandler.Infinite
                     };
@@ -175,7 +175,7 @@ namespace Itinero.Algorithms.Default.EdgeBased
                     Edge1 = DirectedEdgeId.NO_EDGE,
                     Weight1 = weightHandler.Infinite,
                     Edge2 = (new DirectedEdgeId(point.EdgeId, false)),
-                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset))
+                    Weight2 = weightHandler.Calculate(profileId, distance * (1 - offset), edge.Id)
                 };
             }
         }
